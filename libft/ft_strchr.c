@@ -6,7 +6,7 @@
 /*   By: mzelouan <mzelouan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 22:31:19 by mzelouan          #+#    #+#             */
-/*   Updated: 2023/11/18 16:44:22 by mzelouan         ###   ########.fr       */
+/*   Updated: 2024/12/16 01:56:41 by mzelouan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*ft_strchr(const char *s, int c)
 	unsigned char	ch;
 
 	ch = (unsigned char)c;
+	if (s == NULL)
+		return (NULL);
 	while (*s)
 	{
 		if (*s == ch)

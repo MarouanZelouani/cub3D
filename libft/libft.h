@@ -6,7 +6,7 @@
 /*   By: mzelouan <mzelouan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 22:03:59 by mzelouan          #+#    #+#             */
-/*   Updated: 2023/11/12 17:42:56 by mzelouan         ###   ########.fr       */
+/*   Updated: 2024/12/16 01:59:46 by mzelouan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+
+# include <fcntl.h>
+# include <limits.h>
+
+
 
 typedef struct s_list
 {
@@ -71,4 +76,11 @@ void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
 void				ft_striteri(char *s, void (*f)(unsigned int, char *));
 
+// GET_NEXT_LINE :
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 5
+# endif
+
+char	*get_next_line(int fd);
 #endif

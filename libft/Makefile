@@ -6,7 +6,7 @@
 #    By: mzelouan <mzelouan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/16 15:01:17 by mzelouan          #+#    #+#              #
-#    Updated: 2023/11/19 21:36:16 by mzelouan         ###   ########.fr        #
+#    Updated: 2024/12/16 02:01:13 by mzelouan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,7 @@ CFILES = 	ft_atoi.c\
 			ft_putendl_fd.c\
 			ft_strlcat.c\
 			ft_substr.c\
+			get_next_line.c\
 
 BFILES =	ft_lstnew_bonus.c\
 			ft_lstadd_front_bonus.c\
