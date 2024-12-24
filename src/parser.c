@@ -198,6 +198,8 @@ int chech_map_element(char **map, int x, int y)
             || (map[x][y + 1] && map[x][y + 1] == ' '))
             return (EXIT_FAILURE);
     }
+    else if (!(map[x][y] == ' ' || map[x][y] == '1'))
+        return (EXIT_FAILURE);
     return (EXIT_SUCCESS);
 }
 
