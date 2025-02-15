@@ -1,40 +1,64 @@
 NAME = cub3D
-CC = cc
-CFLAGS = -Wall -Wextra -Werror -Iincludes
-LIBFT_DIR = ./libft
-HEADER = 
-LIBFT = $(LIBFT_DIR)/libft.a
-SRC_DIR = ./src/ 
-BIN_DIR = bin
+CC = cc -g
+SRC = ./src/main.c
+OBJ = $(SRC:.c=.o)
 
-SRC:= $(foreach dir, $(SRC_DIR), $(wildcard $(dir)/*.c)) 
-OBJ:= $(patsubst %.c, $(BIN_DIR)/%.o, $(notdir $(SRC)))
+all: $(NAME)
 
-vpath %.c $(SRC_DIR)
+$(NAME): $(OBJ)
+	$(CC) $(OBJ) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
 
-all : $(NAME)
+%.o: %.c
+	$(CC) -Wall -Wextra  -I/usr/include -Imlx_linux -O3 -c $< -o $@
+	
+clean:
+	@rm -rf $(OBJ)
 
-$(NAME) : $(OBJ) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+fclean: clean
+	@rm -rf $(NAME)
+
+re: fclean all
+
+
+
+
+# NAME = cub3D
+# CC = cc
+# CFLAGS = -Wall -Wextra -Werror -Iincludes
+# LIBFT_DIR = ./libft
+# HEADER = 
+# LIBFT = $(LIBFT_DIR)/libft.a
+# SRC_DIR = ./src/ 
+# BIN_DIR = bin
+
+# SRC:= $(foreach dir, $(SRC_DIR), $(wildcard $(dir)/*.c)) 
+# OBJ:= $(patsubst %.c, $(BIN_DIR)/%.o, $(notdir $(SRC)))
+
+# vpath %.c $(SRC_DIR)
+
+# all : $(NAME)
+
+# $(NAME) : $(OBJ) $(LIBFT)
+# 	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
  
-$(LIBFT) :
-	make -C $(LIBFT_DIR)
+# $(LIBFT) :
+# 	make -C $(LIBFT_DIR)
 
-$(BIN_DIR) :
-	mkdir -p $(BIN_DIR)
+# $(BIN_DIR) :
+# 	mkdir -p $(BIN_DIR)
 
-$(BIN_DIR)/%.o: %.c | $(BIN_DIR)
-	$(CC) $(FLAGS) -c -o $@ $<
+# $(BIN_DIR)/%.o: %.c | $(BIN_DIR)
+# 	$(CC) $(FLAGS) -c -o $@ $<
 
-re : fclean all
+# re : fclean all
 
-clean : 
-	make -C $(LIBFT_DIR) clean
-	rm -rf  $(BIN_DIR)
+# clean : 
+# 	make -C $(LIBFT_DIR) clean
+# 	rm -rf  $(BIN_DIR)
 
-fclean : clean
-	make -C $(LIBFT_DIR) fclean
-	rm -rf $(NAME)
+# fclean : clean
+# 	make -C $(LIBFT_DIR) fclean
+# 	rm -rf $(NAME)
 
-.PHONY: re all clean fclean 
-.SECOUNDARY: 
+# .PHONY: re all clean fclean 
+# .SECOUNDARY: 
