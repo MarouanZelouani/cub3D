@@ -1,6 +1,6 @@
 NAME = cub3D
 CC = cc -g
-SRC = ./src/main.c
+SRC = ./src/main.c  ./src/textures.c ./src/ray.c ./src/3D_map.c ./src/minimap.c ./src/hook.c
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
@@ -18,8 +18,6 @@ fclean: clean
 	@rm -rf $(NAME)
 
 re: fclean all
-
-
 
 
 # NAME = cub3D
