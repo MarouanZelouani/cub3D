@@ -1,6 +1,6 @@
 #include "../includes/cub3D.h"
 
-void perform_dda(t_ray *ray, t_args *args)
+void perform_dda(t_ray *ray)
 {
     while (1)
     {
@@ -16,6 +16,9 @@ void perform_dda(t_ray *ray, t_args *args)
             ray->map_pos.y += ray->step.y;
             ray->side = 1;
         }
+        if (ray->map_pos.x < 0 || ray->map_pos.x >= MAP_WIDTH || 
+            ray->map_pos.y < 0 || ray->map_pos.y >= MAP_HIGHT)
+            break;
         if (map[(int)ray->map_pos.y][(int)ray->map_pos.x] == 1)
             break;
     }
@@ -55,41 +58,48 @@ void get_ray_lenght(t_args *args, t_ray *ray, int ray_number)
         ray->step.y = 1;
         ray->side_dist.y = (ray->map_pos.y + 1.0 - args->player.cords.y / TILE_HSIZE) * ray->delta_dist.y;
     }
-    perform_dda(ray, args);
+    perform_dda(ray);
     if (ray->side == 0)
         ray->lenght = (ray->map_pos.x - (args->player.cords.x / TILE_HSIZE) + (1 - ray->step.x) / 2) / ray->dir.x;
     else
         ray->lenght = (ray->map_pos.y - (args->player.cords.y / TILE_HSIZE) + (1 - ray->step.y) / 2) / ray->dir.y;
 }
 
+t_texture *get_wall_tex(t_args *args, t_ray *ray)
+{
+    t_texture *tex;
+
+    tex = NULL;
+    if (ray->side == 0)
+    {
+        if (ray->step.x > 0)
+            tex = &args->e_tex;
+        else
+            tex = &args->w_tex;
+    }
+    else
+    {
+        if (ray->step.y > 0)
+            tex = &args->s_tex;
+        else
+            tex = &args->n_tex;
+    }
+    return (tex);
+}
+
 void project_3d_map(t_args *args)
 {
     t_ray ray;
-    t_texture *tex;
-    int i;
+    int index;
 
-    i = -1;
+    index = 0;
     ray.side = 0;
     ray.angle_step = FOV / WIDTH;
-    while (++i < WIDTH)
+    while (index < WIDTH)
     {
-        get_ray_lenght(args, &ray, i);
-        if (ray.side == 0)
-        {
-            if (ray.step.x > 0)
-                tex = &args->e_tex;
-            else
-                tex = &args->w_tex;
-        }
-        else
-        {
-            if (ray.step.y > 0)
-                tex = &args->s_tex;
-            else
-                tex = &args->n_tex;
-        }
-        // printf("1==== %d, %d\n", (int)ray.map_pos.x, (int)ray.map_pos.y);
-        draw_wall_slice(args, &ray, tex, i);
+        get_ray_lenght(args, &ray, index);
+        draw_wall_slice(args, &ray, get_wall_tex(args, &ray), index);
+        index++;
     }
 }
 

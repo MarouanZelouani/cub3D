@@ -1,90 +1,102 @@
 #include "../includes/cub3D.h"
 
-
-int ckeck_collisons(t_pair new_cords, t_pair *hitted_wall)
+static int is_wall_collision(double x, double y, double buffer)
 {
-    int collided = 0;
-    int left = (int)((new_cords.x ) / TILE_HSIZE);    
-    int bottom = (int)((new_cords.y ) / TILE_HSIZE);
-    *hitted_wall = (t_pair){0, 0}; 
-    if (map[bottom][left] == 1)
-    {
-        hitted_wall->x = 1;
-        collided = 1;
+    int map_x;
+    int map_y;
+    t_pair tile;
+
+    map_x = (int)(x / TILE_HSIZE);
+    map_y = (int)(y / TILE_HSIZE);
+    if (map[map_y][map_x] == 1)
+        return 1;
+    tile.x = (x / TILE_HSIZE) - map_x;
+    tile.y = (y / TILE_HSIZE) - map_y;
+    if (tile.x < buffer && map_x > 0 && map[map_y][map_x - 1] == 1)
+        return 1;
+    if (tile.x > 1.0 - buffer && map_x < MAP_WIDTH - 1 && map[map_y][map_x + 1] == 1)
+        return 1;
+    if (tile.y < buffer && map_y > 0 && map[map_y - 1][map_x] == 1)
+        return 1;
+    if (tile.y > 1.0 - buffer && map_y < MAP_HIGHT - 1 && map[map_y + 1][map_x] == 1)
+        return 1;
+    if (tile.x < buffer && tile.y < buffer && map_x > 0 && map_y > 0 && 
+        map[map_y - 1][map_x - 1] == 1)
+        return 1;
+    if (tile.x > 1.0 - buffer && tile.y < buffer && map_x < MAP_WIDTH - 1 && map_y > 0 && 
+        map[map_y - 1][map_x + 1] == 1) 
+        return 1;
+    if (tile.x < buffer && tile.y > 1.0 - buffer && map_x > 0 && map_y < MAP_HIGHT - 1 && 
+        map[map_y + 1][map_x - 1] == 1)
+        return 1;
+    if (tile.x > 1.0 - buffer && tile.y > 1.0 - buffer && map_x < MAP_WIDTH - 1 && 
+        map_y < MAP_HIGHT - 1 && map[map_y + 1][map_x + 1] == 1)
+        return 1;
+    return 0;
+}
+
+int set_movement_logic(t_args *args, t_pair *movement_vec)
+{
+    double tmp;
+
+    if (args->keys_pressed[0])
+        return 1;
+    else if (args->keys_pressed[1])
+    {   
+        movement_vec->x *= -1;
+        movement_vec->y *= -1;
+        return 1;
     }
-    return collided;
+    else if (args->keys_pressed[2])
+    {
+        tmp = movement_vec->y;
+        movement_vec->y = -movement_vec->x;
+        movement_vec->x = tmp;
+        return 1;
+    }
+    else if (args->keys_pressed[3])
+    {
+        tmp = movement_vec->x;
+        movement_vec->x = -movement_vec->y;
+        movement_vec->y = tmp;
+        return 1;
+    }
+    return 0;
 }
 
 void check_key_pressed(t_args *args)
 {
     t_pair new_cords;
-    double dy;
-    double dx;
-    double tmp;
-    t_pair slide;
-    int flag;
-    t_pair hitted_wall;
-    double dot_product;
-    t_pair slide_cords;
+    t_pair next_pos;
+    t_pair movement_vec;
 
-    flag = 0;
-    hitted_wall = (t_pair){0, 0};
-    dx = cos(args->player.angle);
-    dy = sin(args->player.angle);
+    movement_vec.x = cos(args->player.angle);
+    movement_vec.y = sin(args->player.angle);
     new_cords = args->player.cords;
-    if (args->keys_pressed[0] == 1)
-        flag = 1;
-    else if (args->keys_pressed[1] == 1)
-    {   
-        flag = 1;
-        dx *= -1;
-        dy *= -1;
-    }
-    else if (args->keys_pressed[2] == 1)
+    if (args->keys_pressed[5])
+        args->player.angle += 0.007;
+    else if (args->keys_pressed[4])
+        args->player.angle -= 0.007;
+    if (set_movement_logic(args, &movement_vec))
     {
-        flag = 1;
-        tmp = dy;
-        dy = -dx;
-        dx = tmp;
-    }
-    else if (args->keys_pressed[3] == 1)
-    {
-        flag = 1;
-        tmp = dx;
-        dx = -dy;
-        dy = tmp;
-    }
-    else if (args->keys_pressed[5] == 1)
-        args->player.angle += 0.005;
-    else if (args->keys_pressed[4] == 1)
-        args->player.angle -= 0.005;
-    if (flag)
-    {
-        new_cords.x += dx * args->player.speed;
-        new_cords.y += dy * args->player.speed;
-        if (ckeck_collisons(new_cords, &hitted_wall)) 
+        // collision checks
+        next_pos.x = new_cords.x + movement_vec.x * args->player.speed;
+        next_pos.y = new_cords.y + movement_vec.y * args->player.speed;
+        double buffer = 0.1;
+        if (!is_wall_collision(next_pos.x, next_pos.y, buffer))
         {
-            dot_product = (dx * hitted_wall.x + dy * hitted_wall.y);
-            slide.x = dx - dot_product * hitted_wall.x;
-            slide.y = dy - dot_product * hitted_wall.y;
-            slide_cords = args->player.cords;
-            slide_cords.x += slide.x * args->player.speed;
-            slide_cords.y += slide.y * args->player.speed;
-            if (!ckeck_collisons(slide_cords, &hitted_wall))
-                args->player.cords = slide_cords;
-            else 
-            {
-                t_pair try_x = args->player.cords, try_y = args->player.cords;
-                try_x.x += slide.x * args->player.speed;
-                try_y.y += slide.y * args->player.speed;
-                if (!ckeck_collisons(try_x, &hitted_wall))
-                    args->player.cords = try_x;
-                else if (!ckeck_collisons(try_y, &hitted_wall))
-                    args->player.cords = try_y;
-            }
+            new_cords.x = next_pos.x;
+            new_cords.y = next_pos.y;
         }
-        else 
-            args->player.cords = new_cords;
+        else
+        {
+            if (!is_wall_collision(next_pos.x, new_cords.y, buffer))
+                new_cords.x = next_pos.x;
+            else if (!is_wall_collision(new_cords.x, next_pos.y, buffer))
+                new_cords.y = next_pos.y;
+        }
+        args->player.cords = new_cords;
+        args->player.cords = new_cords;
     }
 }
 
@@ -93,7 +105,6 @@ int game_loop(t_args *args)
     check_key_pressed(args);
     project_3d_map(args);
     render_minimap(args);
-    draw_rays_minimap(args);
     mlx_put_image_to_window(args->mlx, args->win, args->img.img, 0, 0);
     return (0);
 }
@@ -113,7 +124,7 @@ int key_press(int keycode, t_args *args)
     else if (keycode == 65363)
         args->keys_pressed[5] = 1;        
     else if (keycode == 65307)
-        exit(0);
+        exit(0); // clean up
     return 0;
 }
 
