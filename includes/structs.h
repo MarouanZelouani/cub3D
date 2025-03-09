@@ -57,7 +57,9 @@ typedef struct s_ray
     t_pair side_dist;
     t_pair delta_dist;
     t_pair step;
-    t_pair map_pos;
+    // t_pair map_pos;
+    int map_pos_x;
+    int map_pos_y;
     t_pair hit_point;
     int side;
 	double lenght;

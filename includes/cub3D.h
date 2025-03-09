@@ -13,8 +13,8 @@
 #define WIDTH 800
 #define HEIGHT 600
 #define MAP_WIDTH 12
-#define MAP_HIGHT 8
-#define TILE_HSIZE 50
+#define MAP_HIGHT 13
+#define TILE_HSIZE 40
 #define FOV (MY_PI / 3) 
 #define SKY_COLOR	0x34bdeb
 #define GROUND_COLOR 0x595E60 
@@ -32,7 +32,7 @@
 #define MAP_TILE_COLOR 0xFFFFFF
 
 #define W_TEX "textures/wolfenstein/color_stone.xpm"
-#define S_TEX "textures/wolfenstein/blue_stone.xpm"
+#define S_TEX "textures/wolfenstein/eagle.xpm"
 #define E_TEX "textures/wolfenstein/grey_stone.xpm"
 #define N_TEX "textures/wolfenstein/mossy.xpm"
 

@@ -7,30 +7,30 @@ void perform_dda(t_ray *ray)
         if (ray->side_dist.x < ray->side_dist.y)
         {
             ray->side_dist.x += ray->delta_dist.x;
-            ray->map_pos.x += ray->step.x;
+            ray->map_pos_x += ray->step.x;
             ray->side = 0;
         }
         else
         {
             ray->side_dist.y += ray->delta_dist.y;
-            ray->map_pos.y += ray->step.y;
+            ray->map_pos_y += ray->step.y;
             ray->side = 1;
         }
-        if (ray->map_pos.x < 0 || ray->map_pos.x >= MAP_WIDTH || 
-            ray->map_pos.y < 0 || ray->map_pos.y >= MAP_HIGHT)
+        if (ray->map_pos_x < 0 || ray->map_pos_x >= MAP_WIDTH || 
+            ray->map_pos_y < 0 || ray->map_pos_y >= MAP_HIGHT)
             break;
-        if (map[(int)ray->map_pos.y][(int)ray->map_pos.x] == 1)
+        if (map[ray->map_pos_y][ray->map_pos_x] == 1)
             break;
     }
 }
 
 void init_ray_data(t_args *args, t_ray *ray, int ray_number)
 {
-    ray->angle = args->player.angle - (FOV / 2) + ray_number * ray->angle_step;
+    ray->angle = (args->player.angle - (FOV / 2)) + ray_number * ray->angle_step;
     ray->dir.x = cos(ray->angle);
-    ray->dir.y = sin(ray->angle);
-    ray->map_pos.x = (int)args->player.cords.x / TILE_HSIZE;
-    ray->map_pos.y = (int)args->player.cords.y / TILE_HSIZE;
+    ray->dir.y = sin(ray->angle); 
+    ray->map_pos_x = (int)(args->player.cords.x / TILE_HSIZE);
+    ray->map_pos_y = (int)(args->player.cords.y / TILE_HSIZE);
     ray->delta_dist.x = fabs(1 / ray->dir.x);
     ray->delta_dist.y = fabs(1 / ray->dir.y);
 }
@@ -41,28 +41,29 @@ void get_ray_lenght(t_args *args, t_ray *ray, int ray_number)
     if (ray->dir.x < 0)
     {
         ray->step.x = -1;
-        ray->side_dist.x = (args->player.cords.x / TILE_HSIZE - ray->map_pos.x) * ray->delta_dist.x;
+        ray->side_dist.x = (args->player.cords.x / TILE_HSIZE - ray->map_pos_x) * ray->delta_dist.x;
     }
     else
     {
         ray->step.x = 1;
-        ray->side_dist.x = (ray->map_pos.x + 1.0 - args->player.cords.x / TILE_HSIZE) * ray->delta_dist.x;
+        ray->side_dist.x = (ray->map_pos_x + 1.0 - args->player.cords.x / TILE_HSIZE) * ray->delta_dist.x;
     }  
     if (ray->dir.y < 0)
     {
         ray->step.y = -1;
-        ray->side_dist.y = (args->player.cords.y / TILE_HSIZE - ray->map_pos.y) * ray->delta_dist.y;
+        ray->side_dist.y = (args->player.cords.y / TILE_HSIZE - ray->map_pos_y) * ray->delta_dist.y;
     }
     else
     {
         ray->step.y = 1;
-        ray->side_dist.y = (ray->map_pos.y + 1.0 - args->player.cords.y / TILE_HSIZE) * ray->delta_dist.y;
+        ray->side_dist.y = (ray->map_pos_y + 1.0 - args->player.cords.y / TILE_HSIZE) * ray->delta_dist.y;
     }
     perform_dda(ray);
     if (ray->side == 0)
-        ray->lenght = (ray->map_pos.x - (args->player.cords.x / TILE_HSIZE) + (1 - ray->step.x) / 2) / ray->dir.x;
+        ray->lenght = (ray->map_pos_x - (args->player.cords.x / TILE_HSIZE) + (1 - ray->step.x) / 2) / ray->dir.x;
     else
-        ray->lenght = (ray->map_pos.y - (args->player.cords.y / TILE_HSIZE) + (1 - ray->step.y) / 2) / ray->dir.y;
+        ray->lenght = (ray->map_pos_y - (args->player.cords.y / TILE_HSIZE) + (1 - ray->step.y) / 2) / ray->dir.y;
+    //ray->lenght *= cos(ray->angle - args->player.angle);
 }
 
 t_texture *get_wall_tex(t_args *args, t_ray *ray)

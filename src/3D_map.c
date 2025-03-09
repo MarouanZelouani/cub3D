@@ -9,16 +9,16 @@ static void init_data(t_args *args, t_wall_slice *data, t_ray *ray, t_texture *t
         data->start = 0;
     if (data->end > HEIGHT)
         data->end = HEIGHT - 1;
-    if (ray->side == 1)
-        data->wall_x = ((args->player.cords.x / TILE_HSIZE) + ray->lenght * ray->dir.x);
-    else
+    if (ray->side == 0)
         data->wall_x = ((args->player.cords.y / TILE_HSIZE) + ray->lenght * ray->dir.y);
+    else
+        data->wall_x = ((args->player.cords.x / TILE_HSIZE) + ray->lenght * ray->dir.x);
     data->wall_x -= floor(data->wall_x);
-    data->tex_x = (int)(data->wall_x * (double)tex->width) % tex->width;
-    if (data->tex_x < 0) 
-        data->tex_x = 0;
+    data->tex_x = (int)(data->wall_x * (tex->width));
     if (data->tex_x >= tex->width) 
         data->tex_x = tex->width - 1;
+    if (data->tex_x < 0)
+        data->tex_x = 0;
     data->stepping = (double)tex->height / data->wall_h;
     data->tex_yy = (data->start - HEIGHT / 2 + data->wall_h / 2) * data->stepping;
 }
@@ -39,7 +39,7 @@ void draw_wall_slice(t_args *args, t_ray *ray, t_texture *tex, int x)
             my_mlx_pixel_put(&args->img, x, y, GROUND_COLOR);
         else 
         {
-            data.tex_y = (int)data.tex_yy  % tex->height;
+            data.tex_y = (int)data.tex_yy % tex->height;
             color =  get_texture_pixel(tex, data.tex_x, data.tex_y);
             my_mlx_pixel_put(&args->img, x, y, color);
             data.tex_yy += data.stepping;

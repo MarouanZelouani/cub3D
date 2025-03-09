@@ -80,8 +80,8 @@ void check_key_pressed(t_args *args)
     if (set_movement_logic(args, &movement_vec))
     {
         // collision checks
-        next_pos.x = new_cords.x + movement_vec.x * args->player.speed;
-        next_pos.y = new_cords.y + movement_vec.y * args->player.speed;
+        next_pos.x = new_cords.x + movement_vec.x * PLAYER_SPEED;
+        next_pos.y = new_cords.y + movement_vec.y * PLAYER_SPEED;
         double buffer = 0.1;
         if (!is_wall_collision(next_pos.x, next_pos.y, buffer))
         {
