@@ -47,6 +47,7 @@ typedef struct s_args
 	t_texture n_tex;
 	t_texture e_tex;
 	t_texture s_tex;
+    t_parsed_data *p_data;
 } t_args;
 
 typedef struct s_ray
@@ -76,12 +77,5 @@ typedef struct s_wall_slice
     double tex_yy;
     double	wall_x;
 } t_wall_slice;
-
-typedef struct s_parser_data
-{
-    int player_map_x;
-    int player_map_y;
-}   t_parser_data ;
-
 
 #endif

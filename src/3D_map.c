@@ -1,5 +1,7 @@
 #include "../includes/cub3D.h"
 
+int apply_shading(int color, float distance);
+
 static void init_data(t_args *args, t_wall_slice *data, t_ray *ray, t_texture *tex)
 {
     data->wall_h = HEIGHT / (ray->lenght * cos(ray->angle - args->player.angle));
@@ -23,6 +25,19 @@ static void init_data(t_args *args, t_wall_slice *data, t_ray *ray, t_texture *t
     data->tex_yy = (data->start - HEIGHT / 2 + data->wall_h / 2) * data->stepping;
 }
 
+void generate_stars()
+{
+    int i = 0;
+
+    srand(42);
+    while (i < STAR_COUNT)
+    {
+        stars[i].x = rand() % WIDTH;
+        stars[i].y = rand() % (HEIGHT / 2);
+        i++;
+    }
+}
+
 void draw_wall_slice(t_args *args, t_ray *ray, t_texture *tex, int x)
 {
     t_wall_slice data;
@@ -34,9 +49,23 @@ void draw_wall_slice(t_args *args, t_ray *ray, t_texture *tex, int x)
     while (y < HEIGHT)
     {
         if (y < data.start)
-            my_mlx_pixel_put(&args->img, x, y, SKY_COLOR);
+        {
+            int star_here = 0;
+            for (int i = 0; i < STAR_COUNT; i++)
+            {
+                if (stars[i].x == x && stars[i].y == y)
+                {
+                    star_here = 1;
+                    break;
+                }
+            }
+            if (star_here)
+                my_mlx_pixel_put(&args->img, x, y, STAR_COLOR);
+            else
+                my_mlx_pixel_put(&args->img, x, y, args->p_data->ceiling_rgb);
+        }
         else if (y > data.end)
-            my_mlx_pixel_put(&args->img, x, y, GROUND_COLOR);
+            my_mlx_pixel_put(&args->img, x, y, args->p_data->floor_rgb);
         else 
         {
             data.tex_y = (int)data.tex_yy % tex->height;

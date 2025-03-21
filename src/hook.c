@@ -1,6 +1,6 @@
 #include "../includes/cub3D.h"
 
-static int is_wall_collision(double x, double y, double buffer)
+static int is_wall_collision(double x, double y, double buffer, t_args *args)
 {
     int map_x;
     int map_y;
@@ -8,29 +8,29 @@ static int is_wall_collision(double x, double y, double buffer)
 
     map_x = (int)(x / TILE_HSIZE);
     map_y = (int)(y / TILE_HSIZE);
-    if (map[map_y][map_x] == 1)
+    if (args->p_data->map[map_y][map_x] == '1')
         return 1;
     tile.x = (x / TILE_HSIZE) - map_x;
     tile.y = (y / TILE_HSIZE) - map_y;
-    if (tile.x < buffer && map_x > 0 && map[map_y][map_x - 1] == 1)
+    if (tile.x < buffer && map_x > 0 && args->p_data->map[map_y][map_x - 1] == '1')
         return 1;
-    if (tile.x > 1.0 - buffer && map_x < MAP_WIDTH - 1 && map[map_y][map_x + 1] == 1)
+    if (tile.x > 1.0 - buffer && map_x < args->p_data->w - 1 && args->p_data->map[map_y][map_x + 1] == '1')
         return 1;
-    if (tile.y < buffer && map_y > 0 && map[map_y - 1][map_x] == 1)
+    if (tile.y < buffer && map_y > 0 && args->p_data->map[map_y - 1][map_x] == '1')
         return 1;
-    if (tile.y > 1.0 - buffer && map_y < MAP_HIGHT - 1 && map[map_y + 1][map_x] == 1)
+    if (tile.y > 1.0 - buffer && map_y < args->p_data->h - 1 && args->p_data->map[map_y + 1][map_x] == '1')
         return 1;
     if (tile.x < buffer && tile.y < buffer && map_x > 0 && map_y > 0 && 
-        map[map_y - 1][map_x - 1] == 1)
+        args->p_data->map[map_y - 1][map_x - 1] == '1')
         return 1;
-    if (tile.x > 1.0 - buffer && tile.y < buffer && map_x < MAP_WIDTH - 1 && map_y > 0 && 
-        map[map_y - 1][map_x + 1] == 1) 
+    if (tile.x > 1.0 - buffer && tile.y < buffer && map_x < args->p_data->w - 1 && map_y > 0 && 
+        args->p_data->map[map_y - 1][map_x + 1] == '1') 
         return 1;
-    if (tile.x < buffer && tile.y > 1.0 - buffer && map_x > 0 && map_y < MAP_HIGHT - 1 && 
-        map[map_y + 1][map_x - 1] == 1)
+    if (tile.x < buffer && tile.y > 1.0 - buffer && map_x > 0 && map_y < args->p_data->h - 1 && 
+        args->p_data->map[map_y + 1][map_x - 1] == '1')
         return 1;
-    if (tile.x > 1.0 - buffer && tile.y > 1.0 - buffer && map_x < MAP_WIDTH - 1 && 
-        map_y < MAP_HIGHT - 1 && map[map_y + 1][map_x + 1] == 1)
+    if (tile.x > 1.0 - buffer && tile.y > 1.0 - buffer && map_x < args->p_data->w - 1 && 
+        map_y < args->p_data->h - 1 && args->p_data->map[map_y + 1][map_x + 1] == '1')
         return 1;
     return 0;
 }
@@ -83,16 +83,16 @@ void check_key_pressed(t_args *args)
         next_pos.x = new_cords.x + movement_vec.x * PLAYER_SPEED;
         next_pos.y = new_cords.y + movement_vec.y * PLAYER_SPEED;
         double buffer = 0.1;
-        if (!is_wall_collision(next_pos.x, next_pos.y, buffer))
+        if (!is_wall_collision(next_pos.x, next_pos.y, buffer, args))
         {
             new_cords.x = next_pos.x;
             new_cords.y = next_pos.y;
         }
         else
         {
-            if (!is_wall_collision(next_pos.x, new_cords.y, buffer))
+            if (!is_wall_collision(next_pos.x, new_cords.y, buffer, args))
                 new_cords.x = next_pos.x;
-            else if (!is_wall_collision(new_cords.x, next_pos.y, buffer))
+            else if (!is_wall_collision(new_cords.x, next_pos.y, buffer, args))
                 new_cords.y = next_pos.y;
         }
         args->player.cords = new_cords;
@@ -107,6 +107,16 @@ int game_loop(t_args *args)
     render_minimap(args);
     mlx_put_image_to_window(args->mlx, args->win, args->img.img, 0, 0);
     return (0);
+}
+
+int	close_window(t_args *args)
+{
+	mlx_destroy_window(args->mlx, args->win);
+	mlx_destroy_image(args->mlx, args->img.img);
+	mlx_destroy_display(args->mlx);
+	free(args->mlx);
+    free_data(args->p_data);
+	exit(EXIT_SUCCESS);
 }
 
 int key_press(int keycode, t_args *args)
@@ -124,7 +134,7 @@ int key_press(int keycode, t_args *args)
     else if (keycode == 65363)
         args->keys_pressed[5] = 1;        
     else if (keycode == 65307)
-        exit(0); // clean up
+        close_window(args);
     return 0;
 }
 

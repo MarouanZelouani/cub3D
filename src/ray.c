@@ -1,6 +1,6 @@
 #include "../includes/cub3D.h"
 
-void perform_dda(t_ray *ray)
+void perform_dda(t_ray *ray, t_args *args)
 {
     while (1)
     {
@@ -16,10 +16,10 @@ void perform_dda(t_ray *ray)
             ray->map_pos_y += ray->step.y;
             ray->side = 1;
         }
-        if (ray->map_pos_x < 0 || ray->map_pos_x >= MAP_WIDTH || 
-            ray->map_pos_y < 0 || ray->map_pos_y >= MAP_HIGHT)
+        if (ray->map_pos_x < 0 || ray->map_pos_x >= args->p_data->w || 
+            ray->map_pos_y < 0 || ray->map_pos_y >= args->p_data->h)
             break;
-        if (map[ray->map_pos_y][ray->map_pos_x] == 1)
+        if (args->p_data->map[ray->map_pos_y][ray->map_pos_x] == '1')
             break;
     }
 }
@@ -58,7 +58,7 @@ void get_ray_lenght(t_args *args, t_ray *ray, int ray_number)
         ray->step.y = 1;
         ray->side_dist.y = (ray->map_pos_y + 1.0 - args->player.cords.y / TILE_HSIZE) * ray->delta_dist.y;
     }
-    perform_dda(ray);
+    perform_dda(ray, args);
     if (ray->side == 0)
         ray->lenght = (ray->map_pos_x - (args->player.cords.x / TILE_HSIZE) + (1 - ray->step.x) / 2) / ray->dir.x;
     else

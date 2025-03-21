@@ -2,10 +2,10 @@
 
 void load_all_textures(t_args *args)
 {
-    args->w_tex = load_texture(args->mlx, W_TEX);
-    args->n_tex = load_texture(args->mlx, N_TEX);
-    args->e_tex = load_texture(args->mlx, E_TEX);
-    args->s_tex = load_texture(args->mlx, S_TEX);
+    args->w_tex = load_texture(args->mlx, args->p_data->west_textures);
+    args->n_tex = load_texture(args->mlx, args->p_data->north_textures);
+    args->e_tex = load_texture(args->mlx, args->p_data->east_textures);
+    args->s_tex = load_texture(args->mlx, args->p_data->south_textures);
 }
 
 t_texture load_texture(void *mlx, char *texture_path)
@@ -15,7 +15,7 @@ t_texture load_texture(void *mlx, char *texture_path)
     texture.img = mlx_xpm_file_to_image(mlx, texture_path, &texture.width, &texture.height);
     if (!texture.img)
     {
-        perror("error");
+        perror("Error: can't open file");
         exit(1); 
     }
     texture.addr =  mlx_get_data_addr(texture.img, &texture.bpp, 

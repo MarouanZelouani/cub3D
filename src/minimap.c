@@ -14,16 +14,16 @@ void render_minimap(t_args *args)
 
     map_y = -1;
     render_map_box(args);
-    while (++map_y < MAP_HIGHT)
+    while (++map_y < args->p_data->h)
     {
         map_x = -1;
-        while (++map_x < MAP_WIDTH)
+        while (++map_x < args->p_data->w)
         {
             rel.x = (map_x * TILE_HSIZE - args->player.cords.x) * MINIMAP_SCALE;
             rel.y = (map_y * TILE_HSIZE - args->player.cords.y) * MINIMAP_SCALE;
             mini_x = (MINIMAP_WIDTH / 2) + (int)rel.x;
             mini_y = (MINIMAP_HIEGHT / 2) + (int)rel.y;
-            if (map[map_y][map_x] == 1) 
+            if (args->p_data->map[map_y][map_x] == '1') 
                 render_map_tile(args, mini_x, mini_y, 1);    
             else 
                 render_map_tile(args, mini_x, mini_y, 0);
