@@ -1,6 +1,6 @@
 #include "../includes/cub3D.h"
 
-static int is_wall_collision(double x, double y, double buffer, t_args *args)
+static int collision(double x, double y, double buffer, t_args *args)
 {
     int map_x;
     int map_y;
@@ -66,38 +66,38 @@ int set_movement_logic(t_args *args, t_pair *movement_vec)
 
 void check_key_pressed(t_args *args)
 {
-    t_pair new_cords;
     t_pair next_pos;
     t_pair movement_vec;
 
     movement_vec.x = cos(args->player.angle);
     movement_vec.y = sin(args->player.angle);
-    new_cords = args->player.cords;
     if (args->keys_pressed[5])
         args->player.angle += 0.007;
     else if (args->keys_pressed[4])
         args->player.angle -= 0.007;
     if (set_movement_logic(args, &movement_vec))
     {
-        // collision checks
-        next_pos.x = new_cords.x + movement_vec.x * PLAYER_SPEED;
-        next_pos.y = new_cords.y + movement_vec.y * PLAYER_SPEED;
-        double buffer = 0.1;
-        if (!is_wall_collision(next_pos.x, next_pos.y, buffer, args))
-        {
-            new_cords.x = next_pos.x;
-            new_cords.y = next_pos.y;
-        }
+        next_pos.x = args->player.cords.x + movement_vec.x * PLAYER_SPEED;
+        next_pos.y = args->player.cords.y + movement_vec.y * PLAYER_SPEED;
+        if (!collision(next_pos.x, next_pos.y, 0.1, args))
+            args->player.cords = (t_pair){next_pos.x, next_pos.y};
         else
         {
-            if (!is_wall_collision(next_pos.x, new_cords.y, buffer, args))
-                new_cords.x = next_pos.x;
-            else if (!is_wall_collision(new_cords.x, next_pos.y, buffer, args))
-                new_cords.y = next_pos.y;
+            if (!collision(next_pos.x, args->player.cords.y, 0.1, args))
+                args->player.cords.x = next_pos.x;
+            else if (!collision(args->player.cords.x, next_pos.y, 0.1, args))
+            args->player.cords.y = next_pos.y;
         }
-        args->player.cords = new_cords;
-        args->player.cords = new_cords;
     }
+}
+
+void draw_lightsaber(t_args *args)
+{
+    t_texture * image = NULL;
+    image->img = mlx_xpm_file_to_image(args->mlx, "textures/gun.xpm", &image->width, &image->height);
+    int gun_x = (WIDTH / 2);
+    int gun_y = (HEIGHT/ 2);
+    mlx_put_image_to_window(args->mlx, args->win, image->img, gun_x, gun_y);
 }
 
 int game_loop(t_args *args)
@@ -105,6 +105,7 @@ int game_loop(t_args *args)
     check_key_pressed(args);
     project_3d_map(args);
     render_minimap(args);
+    //draw_lightsaber(args);
     mlx_put_image_to_window(args->mlx, args->win, args->img.img, 0, 0);
     return (0);
 }

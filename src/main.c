@@ -18,19 +18,19 @@ void start_game(t_parsed_data *data)
 {
     t_args p_args;
    
+    p_args.p_data = data;
     p_args.mlx = mlx_init();
+    load_all_textures(&p_args);
     p_args.win = mlx_new_window(p_args.mlx, WIDTH, HEIGHT, "ME SI");
     p_args.img.img = mlx_new_image(p_args.mlx, WIDTH, HEIGHT);
     p_args.img.addr = mlx_get_data_addr(p_args.img.img, &p_args.img.bits_per_pixel,
             &p_args.img.line_length, &p_args.img.endian);
-    p_args.p_data = data;
-    load_all_textures(&p_args);
     p_args.player.cords.x = data->y * TILE_HSIZE + TILE_HSIZE / 2;
     p_args.player.cords.y = data->x * TILE_HSIZE + TILE_HSIZE / 2;
-    ft_memset(p_args.keys_pressed, 0, sizeof(int) * 6); // use ft_memset
+    ft_memset(p_args.keys_pressed, 0, sizeof(int) * 6);
     generate_stars();
     p_args.player.speed = PLAYER_SPEED;
-    p_args.player.angle = get_player_angle(data->direction); //set_player_direction();
+    p_args.player.angle = get_player_angle(data->direction);
     project_3d_map(&p_args);
     render_minimap(&p_args);
     mlx_hook(p_args.win, 2, 1L << 0, key_press, &p_args);
@@ -52,7 +52,5 @@ int main (int ac, char **av)
     if (validation(&data))
         return (free_data(&data), ft_putstr_fd("adakaa", 2),1);
     start_game(&data);
-    //free_data(&data);
-    return (0);
 }
 
