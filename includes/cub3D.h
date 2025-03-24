@@ -52,5 +52,7 @@ int key_release(int keycode, t_args *args);
 void render_minimap(t_args *args);
 void get_ray_lenght(t_args *args, t_ray *ray, int ray_number);
 int	close_window(t_args *args);
+int collision(double x, double y, double buffer, t_args *args);
+void dda(t_ray *ray, t_args *args);
 
 #endif
