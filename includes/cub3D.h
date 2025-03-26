@@ -6,7 +6,7 @@
 /*   By: mzelouan <mzelouan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 09:41:39 by mzelouan          #+#    #+#             */
-/*   Updated: 2025/03/26 01:09:44 by mzelouan         ###   ########.fr       */
+/*   Updated: 2025/03/26 10:41:59 by mzelouan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@
 // minimap params
 # define RAYS_COLOR 0xFF0000
 # define MAP_BOX_COLOR 0x000000
-# define MINIMAP_WIDTH 120
-# define MINIMAP_HIEGHT 100
+# define MINIMAP_W 120
+# define MINIMAP_H 100
 # define MINIMAP_X 50
 # define MINIMAP_Y 50
 # define MINIMAP_SCALE 0.3
@@ -52,9 +52,9 @@ int			game_loop(t_args *args);
 int			key_press(int keycode, t_args *args);
 int			key_release(int keycode, t_args *args);
 void		render_minimap(t_args *args);
-void		get_ray_lenght(t_args *args, t_ray *ray, int ray_number);
+void		get_ray_lenght(t_args *args, t_ray *ray);
 int			close_window(t_args *args);
 int			collision(double x, double y, double buffer, t_args *args);
 void		dda(t_ray *ray, t_args *args);
-
+void	init_ray_data(t_args *args, t_ray *ray, int ray_number);
 #endif

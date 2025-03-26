@@ -6,7 +6,7 @@
 /*   By: mzelouan <mzelouan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 00:50:42 by mzelouan          #+#    #+#             */
-/*   Updated: 2025/03/24 09:35:11 by mzelouan         ###   ########.fr       */
+/*   Updated: 2025/03/26 10:42:38 by mzelouan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	project_3d_map(t_args *args)
 	ray.angle_step = FOV / WIDTH;
 	while (index < WIDTH)
 	{
-		get_ray_lenght(args, &ray, index);
+		init_ray_data(args, &ray, index);
+		get_ray_lenght(args, &ray);
 		draw_wall_slice(args, &ray, get_wall_tex(args, &ray), index);
 		index++;
 	}

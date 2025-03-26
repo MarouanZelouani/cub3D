@@ -6,7 +6,7 @@
 /*   By: mzelouan <mzelouan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 00:50:21 by mzelouan          #+#    #+#             */
-/*   Updated: 2025/03/24 09:12:19 by mzelouan         ###   ########.fr       */
+/*   Updated: 2025/03/26 10:42:20 by mzelouan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,8 @@ void	dda(t_ray *ray, t_args *args)
 	}
 }
 
-void	get_ray_lenght(t_args *args, t_ray *ray, int ray_number)
+void	get_ray_lenght(t_args *args, t_ray *ray)
 {
-	init_ray_data(args, ray, ray_number);
 	if (ray->dir.x < 0)
 	{
 		ray->step.x = -1;
