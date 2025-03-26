@@ -5,12 +5,14 @@ void	read_line_fd(char **stash, int fd);
 char	*extract_line(char *stash);
 char	*clean_stash(char *stash);
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd, int pdiddy)
 {
 	static char	*stash;
 	char		*line;
 
 	line = NULL;
+  if (pdiddy == 1 && stash != NULL)
+    return (free(stash), NULL);
 	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 1024)
 		return (NULL);
 	read_line_fd(&stash, fd);

@@ -1,49 +1,59 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   space.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mzelouan <mzelouan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/26 10:30:40 by mzelouan          #+#    #+#             */
+/*   Updated: 2025/03/26 10:30:41 by mzelouan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cub3D.h"
 
-static int up(t_parsed_data *data, int i, int j)
+static int	up(t_parsed_data *data, int i, int j)
 {
-  return (data->map[i - 1][j] != ' ' && data->map[i - 1][j] != '1');
+	return (data->map[i - 1][j] != ' ' && data->map[i - 1][j] != '1');
 }
 
-static int down(t_parsed_data *data, int i, int j)
+static int	down(t_parsed_data *data, int i, int j)
 {
-  return (data->map[i + 1][j] != ' ' && data->map[i + 1][j] != '1');
+	return (data->map[i + 1][j] != ' ' && data->map[i + 1][j] != '1');
 }
 
-static int left(t_parsed_data *data, int i, int j)
+static int	left(t_parsed_data *data, int i, int j)
 {
-  return (data->map[i][j - 1] != ' ' && data->map[i][j - 1] != '1');
+	return (data->map[i][j - 1] != ' ' && data->map[i][j - 1] != '1');
 }
 
-static int right(t_parsed_data *data, int i, int j)
+static int	right(t_parsed_data *data, int i, int j)
 {
-  return (data->map[i][j + 1] != ' ' && data->map[i][j + 1] != '1');
+	return (data->map[i][j + 1] != ' ' && data->map[i][j + 1] != '1');
 }
 
-int space_checker(t_parsed_data *data)
+int	space_checker(t_parsed_data *data)
 {
-  int i;
-  int j;
+	int	i;
+	int	j;
 
-  i = 0;
-  j = 0;
-  while (data->map[i])
-  {
-    j = 0;
-    while (data->map[i][j])
-    {
-      if (data->map[i][j] == ' ')
-      {
-        if ((i != 0 && up(data, i, j)) ||\
-            (data->map[i + 1] != NULL && down(data, i, j)) ||\
-            (j != 0 && left(data, i, j)) ||\
-            (data->map[i][j + 1] != 0 && right(data, i, j))
-            )
-          return (ft_putstr_fd("grrno\n", 2), -1);
-      }
-      j++;
-    }
-    i++;
-  }
-  return (0);
+	i = 0;
+	j = 0;
+	while (data->map[i])
+	{
+		j = 0;
+		while (data->map[i][j])
+		{
+			if (data->map[i][j] == ' ')
+			{
+				if ((i != 0 && up(data, i, j)) || (data->map[i + 1] != NULL
+						&& down(data, i, j)) || (j != 0 && left(data, i, j))
+					|| (data->map[i][j + 1] != 0 && right(data, i, j)))
+					return (ft_putstr_fd("grrno\n", 2), -1);
+			}
+			j++;
+		}
+		i++;
+	}
+	return (0);
 }

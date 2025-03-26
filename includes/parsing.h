@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mzelouan <mzelouan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/26 10:31:09 by mzelouan          #+#    #+#             */
+/*   Updated: 2025/03/26 10:31:10 by mzelouan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSING_H
 #define PARSING_H
 
@@ -14,9 +26,9 @@ typedef struct s_parsed_data
   char **map;
   int x;
   int y;
-  int h;
-  int w;
   char direction;
+  int w;
+  int h;
 } t_parsed_data;
 
 typedef struct s_map_list
@@ -47,4 +59,9 @@ int validation(t_parsed_data *data);
 int space_checker(t_parsed_data *data);
 int zero_checker(t_parsed_data *data);
 void trim(t_parsed_data *data);
+int get_size(t_map_list *node, int *len, int *rows);
+void write_to_map(t_parsed_data *data, t_map_list *node, int i, int *j);
+void fill(t_parsed_data *data, int j, int i, int len);
+void fill_map(t_parsed_data *data, t_map_list *node, int len);
+void	cut(char **str);
 #endif // !PARSING_H

@@ -79,8 +79,8 @@ void				ft_striteri(char *s, void (*f)(unsigned int, char *));
 // GET_NEXT_LINE :
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 5
+#  define BUFFER_SIZE 1
 # endif
 
-char	*get_next_line(int fd);
+char	*get_next_line(int fd, int pdiddy);
 #endif
